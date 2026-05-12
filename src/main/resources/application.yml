@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: scale-experiment
+  threads:
+    virtual:
+      enabled: true
+  main:
+    banner-mode: off
+
+server:
+  port: 8080
+  http2:
+    enabled: true
+  compression:
+    enabled: false
+  undertow:
+    threads:
+      io: 4
+      worker: 200
+    buffer-size: 1024
+    direct-buffers: true
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    root: WARN
+    com.paulograbin.scale: INFO
