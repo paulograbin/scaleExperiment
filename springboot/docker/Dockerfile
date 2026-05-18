@@ -9,6 +9,7 @@ ENV JAVA_OPTS="-XX:+UseZGC \
   -Xms512m \
   -Xmx512m \
   -XX:+AlwaysPreTouch \
+  -Xlog:gc*=info:stdout:time,uptime,level,tags \
   -Djava.security.egd=file:/dev/./urandom \
   -Dspring.jmx.enabled=false"
 

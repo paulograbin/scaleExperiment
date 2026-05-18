@@ -8,7 +8,7 @@ Compare multiple implementations of a hello world endpoint targeting 10,000+ req
 
 | Implementation | Directory | Runtime | Framework/Server |
 |----------------|-----------|---------|-----------------|
-| Spring Boot | `/` (root) | Java 25, Gradle | Undertow + Virtual Threads |
+| Spring Boot | `springboot/` | Java 25, Gradle | Undertow + Virtual Threads |
 | Quarkus | `quarkus/` | Java 25, Maven | Vert.x + RESTEasy Reactive |
 | Go | `go/` | Go 1.22 | net/http (stdlib) |
 
@@ -41,15 +41,14 @@ Compare multiple implementations of a hello world endpoint targeting 10,000+ req
 
 ```
 scaleExperiment/
-├── build.gradle.kts              # Spring Boot (root project)
-├── settings.gradle.kts
-├── src/main/java/com/paulograbin/scale/
-│   ├── ScaleExperimentApplication.java
-│   └── controller/HelloController.java
-├── src/main/resources/
-│   ├── application.yml
-│   └── logback-spring.xml
-├── docker/Dockerfile
+├── springboot/                   # Spring Boot implementation
+│   ├── build.gradle.kts
+│   ├── settings.gradle.kts
+│   ├── gradlew
+│   ├── Dockerfile
+│   └── src/main/java/com/paulograbin/scale/
+│       ├── ScaleExperimentApplication.java
+│       └── controller/HelloController.java
 ├── quarkus/                      # Quarkus implementation
 │   ├── pom.xml
 │   ├── mvnw
@@ -61,7 +60,8 @@ scaleExperiment/
 │   ├── go.mod
 │   └── Dockerfile
 ├── k6/load-test.js
-└── wrk/benchmark.sh
+├── wrk/benchmark.sh
+└── PLAN.md
 ```
 
 ## Running Each Implementation
@@ -69,6 +69,7 @@ scaleExperiment/
 ### Spring Boot
 ```bash
 sdk use java 25.0.1-tem
+cd springboot
 ./gradlew bootRun -Dorg.gradle.jvmargs="-XX:+UseZGC -XX:+ZGenerational -Xms512m -Xmx512m"
 ```
 
