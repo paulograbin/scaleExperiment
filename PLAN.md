@@ -1,27 +1,47 @@
-# High-Throughput Spring Boot Hello World (10k req/s)
+# High-Throughput Hello World Benchmark (10k req/s)
 
 ## Context
 
-Build a Java Spring Boot application from scratch that sustains 10,000 requests per second on a hello world endpoint. The project lives in `/home/paulograbin/Desktop/scaleExperiment` (currently empty). The focus is on server tuning, JVM configuration, and observability — not business logic.
+Compare multiple implementations of a hello world endpoint targeting 10,000+ requests per second. The focus is on server tuning, JVM configuration, and observability — not business logic. All implementations run on port 8080 with the same `/hello` endpoint.
 
-## Architecture Decisions
+## Implementations
+
+| Implementation | Directory | Runtime | Framework/Server |
+|----------------|-----------|---------|-----------------|
+| Spring Boot | `/` (root) | Java 25, Gradle | Undertow + Virtual Threads |
+| Quarkus | `quarkus/` | Java 25, Maven | Vert.x + RESTEasy Reactive |
+| Go | `go/` | Go 1.22 | net/http (stdlib) |
+
+## Architecture Decisions (shared)
 
 | Decision | Choice | Why |
 |----------|--------|-----|
-| Server | Undertow (not Tomcat) | 5-15% better throughput on small payloads, lower memory |
-| Concurrency | Virtual threads (Java 21) | Eliminates thread-pool ceiling, near-zero scheduling overhead |
+| Java version | 25 (Temurin) | Latest LTS, virtual threads, modern GC |
 | GC | ZGC Generational | Sub-1ms pauses vs G1's 5-20ms at this request rate |
 | Protocol | HTTP/2 + keep-alive | Multiplexed connections reduce socket overhead |
 | Compression | Disabled | 13-byte payload — compression adds CPU cost, not savings |
-| Build tool | Gradle (Kotlin DSL) | Faster builds, native GraalVM plugin support |
 | Monitoring | Micrometer + Prometheus | Pull-based, no overhead on app, latency percentiles |
 | Native image | Not recommended | No ZGC support in native; JIT wins for sustained throughput |
+
+### Spring Boot specifics
+| Decision | Choice | Why |
+|----------|--------|-----|
+| Server | Undertow (not Tomcat) | 5-15% better throughput on small payloads, lower memory |
+| Concurrency | Virtual threads | Eliminates thread-pool ceiling, near-zero scheduling overhead |
+| Build tool | Gradle (Kotlin DSL) | Faster builds, native GraalVM plugin support |
+
+### Quarkus specifics
+| Decision | Choice | Why |
+|----------|--------|-----|
+| REST layer | RESTEasy Reactive | Non-blocking by default, minimal allocations |
+| Server | Vert.x (event-loop) | No thread-per-request overhead, built-in to Quarkus |
+| Build tool | Maven | Standard for Quarkus ecosystem |
 
 ## Project Structure
 
 ```
 scaleExperiment/
-├── build.gradle.kts
+├── build.gradle.kts              # Spring Boot (root project)
 ├── settings.gradle.kts
 ├── src/main/java/com/paulograbin/scale/
 │   ├── ScaleExperimentApplication.java
@@ -29,71 +49,66 @@ scaleExperiment/
 ├── src/main/resources/
 │   ├── application.yml
 │   └── logback-spring.xml
-├── src/test/java/com/paulograbin/scale/
-│   └── ScaleExperimentApplicationTest.java
 ├── docker/Dockerfile
+├── quarkus/                      # Quarkus implementation
+│   ├── pom.xml
+│   ├── mvnw
+│   ├── Dockerfile
+│   └── src/main/java/com/paulograbin/scale/
+│       └── HelloResource.java
+├── go/                           # Go implementation
+│   ├── main.go
+│   ├── go.mod
+│   └── Dockerfile
 ├── k6/load-test.js
 └── wrk/benchmark.sh
 ```
 
-## Implementation Steps
+## Running Each Implementation
 
-### 1. Generate project skeleton
-- Create `build.gradle.kts` with Spring Boot 3.4.x, Java 21 toolchain
-- Exclude Tomcat, include Undertow, Actuator, Prometheus registry
-- Create `settings.gradle.kts`
-- Generate Gradle wrapper
-
-### 2. Main application class
-- `ScaleExperimentApplication.java` — standard `@SpringBootApplication` entry point
-
-### 3. Hello controller
-- Pre-built static `ResponseEntity<String>` with "Hello, World!" (avoids per-request allocation)
-- `GET /hello` returning `text/plain`
-- No parameters, no validation, no serialization
-
-### 4. Application configuration (`application.yml`)
-```yaml
-spring.threads.virtual.enabled: true
-server.http2.enabled: true
-server.compression.enabled: false
-server.undertow.threads.io: 4
-server.undertow.threads.worker: 200
-server.undertow.buffer-size: 1024
-server.undertow.direct-buffers: true
-management.endpoints.web.exposure.include: health,prometheus,metrics
+### Spring Boot
+```bash
+sdk use java 25.0.1-tem
+./gradlew bootRun -Dorg.gradle.jvmargs="-XX:+UseZGC -XX:+ZGenerational -Xms512m -Xmx512m"
 ```
 
-### 5. Logging (`logback-spring.xml`)
-- Async appender with queue size 1024
-- Root level WARN to minimize I/O during load
-
-### 6. Docker setup
-- `eclipse-temurin:21-jre-alpine` base
-- JVM flags: `-XX:+UseZGC -XX:+ZGenerational -Xms512m -Xmx512m -XX:+AlwaysPreTouch`
-- Expose 8080, recommend `--cpus=4 --memory=768m`
-
-### 7. Load testing scripts
-- **wrk script**: `wrk -t4 -c400 -d30s --latency http://localhost:8080/hello`
-- **k6 script**: `constant-arrival-rate` executor at 10k/s for 60s, with p99 < 10ms threshold
-
-### 8. Basic test
-- Spring Boot test that loads context and hits `/hello`
-
-## JVM Flags (for both local and Docker)
-
-```
--XX:+UseZGC -XX:+ZGenerational -Xms512m -Xmx512m -XX:+AlwaysPreTouch -Djava.security.egd=file:/dev/./urandom -Dspring.jmx.enabled=false
+### Quarkus
+```bash
+sdk use java 25.0.1-tem
+cd quarkus
+./mvnw quarkus:dev                # dev mode
+# or
+./mvnw package && java -XX:+UseZGC -XX:+ZGenerational -Xms512m -Xmx512m -jar target/quarkus-app/quarkus-run.jar
 ```
 
-## Verification Plan
+### Go
+```bash
+cd go
+go run . 
+# or
+go build -o server . && ./server
+```
 
-1. `./gradlew bootRun` with JVM flags
-2. `curl http://localhost:8080/hello` → "Hello, World!"
-3. `curl http://localhost:8080/actuator/prometheus` → metrics visible
-4. Run `wrk -t4 -c400 -d30s --latency http://localhost:8080/hello`
-5. Confirm output shows > 10k req/s and p99 < 10ms
-6. Check `/actuator/prometheus` for `http_server_requests_seconds` metrics
+## Load Testing
+
+- **wrk**: `wrk -t4 -c400 -d30s --latency http://localhost:8080/hello`
+- **k6**: `k6 run k6/load-test.js` (constant-arrival-rate at 10k/s for 60s, p99 < 10ms threshold)
+
+## JVM Flags (Java implementations, local and Docker)
+
+```
+-XX:+UseZGC -XX:+ZGenerational -Xms512m -Xmx512m -XX:+AlwaysPreTouch -Djava.security.egd=file:/dev/./urandom
+```
+
+## Verification
+
+| Step | Spring Boot | Quarkus | Go |
+|------|-------------|---------|-----|
+| Hello | `curl localhost:8080/hello` | same | same |
+| Metrics | `/actuator/prometheus` | `/q/metrics` | `/actuator/prometheus` |
+| Health | `/actuator/health` | `/q/health` | `/actuator/health` |
+| Benchmark | `wrk -t4 -c400 -d30s --latency http://localhost:8080/hello` | same | same |
+| Target | >10k req/s, p99 < 10ms | same | same |
 
 ## Expected Results
 
