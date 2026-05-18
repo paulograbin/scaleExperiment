@@ -3,21 +3,29 @@
 build/
 !gradle/wrapper/gradle-wrapper.jar
 
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
 # IDE
 .idea/
 *.iml
 *.ipr
 *.iws
 .vscode/
+*.swp
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Kotlin
+# Java
 *.class
 *.jar
 *.war
+
+# Go
+go/server
 
 # Environment
 .env
