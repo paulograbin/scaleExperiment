@@ -12,6 +12,7 @@ ENV JAVA_OPTS="-XX:+UseZGC \
   -Xms512m \
   -Xmx512m \
   -XX:+AlwaysPreTouch \
+  -Xlog:gc \
   -Djava.security.egd=file:/dev/./urandom"
 
 EXPOSE 8080
