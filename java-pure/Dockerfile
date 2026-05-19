@@ -8,7 +8,6 @@ WORKDIR /app
 COPY --from=build /app/out/ .
 
 ENV JAVA_OPTS="-XX:+UseZGC \
-  -XX:+ZGenerational \
   -Xms512m \
   -Xmx512m \
   -XX:+AlwaysPreTouch \
