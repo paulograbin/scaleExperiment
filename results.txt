@@ -1,0 +1,321 @@
+-- quarkus
+
+iamge built with   -Xms512m -Xmx512m
+docker run --rm -p 8080:8080 --cpus=4 --memory=768m scale-quarkus
+
+./wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.67ms    6.50ms 131.45ms   94.59%
+    Req/Sec    38.84k    11.65k   48.70k    83.00%
+  Latency Distribution
+     50%    2.27ms
+     75%    2.78ms
+     90%    4.47ms
+     99%   33.72ms
+  4639304 requests in 30.06s, 407.04MB read
+Requests/sec: 154358.82
+Transfer/sec:     13.54MB
+
+
+iamge built with   -Xms512m -Xmx512m
+docker run --rm -p 8080:8080 scale-quarkus
+
+➜ ./wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.38ms    2.71ms  94.40ms   98.77%
+    Req/Sec    42.89k     4.80k   47.51k    96.92%
+  Latency Distribution
+     50%    2.23ms
+     75%    2.57ms
+     90%    3.05ms
+     99%    5.63ms
+  5122487 requests in 30.07s, 449.44MB read
+Requests/sec: 170371.61
+Transfer/sec:     14.95MB
+
+image build without limits
+➜ ./wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.48ms    2.91ms  97.25ms   98.58%
+    Req/Sec    41.39k     5.93k   49.76k    89.00%
+  Latency Distribution
+     50%    2.24ms
+     75%    2.73ms
+     90%    3.35ms
+     99%    6.22ms
+  4942907 requests in 30.06s, 433.68MB read
+Requests/sec: 164441.10
+Transfer/sec:     14.43MB
+
+➜ ./wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.08ms  664.86us  21.84ms   72.92%
+    Req/Sec    45.94k     1.86k   49.71k    83.58%
+  Latency Distribution
+     50%    2.07ms
+     75%    2.41ms
+     90%    2.84ms
+     99%    4.04ms
+  5486268 requests in 30.06s, 481.35MB read
+Requests/sec: 182532.31
+Transfer/sec:     16.02MB
+
+➜ ./wrk -t8 -c800 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  8 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.27ms    0.93ms  31.59ms   77.57%
+    Req/Sec    23.15k   766.40    25.40k    73.50%
+  Latency Distribution
+     50%    4.30ms
+     75%    4.74ms
+     90%    5.22ms
+     99%    6.75ms
+  5528247 requests in 30.07s, 485.04MB read
+Requests/sec: 183821.08
+Transfer/sec:     16.13MB
+
+
+
+  - Minor collections (6–14ms) — the generational part is working. Young objects (request allocations) get collected cheaply every ~300ms.
+  This is ideal.
+  - "Allocation Rate" trigger — ZGC sees you're filling the heap fast (~400M every 300ms ≈ 1.3 GB/s allocation rate) and collects younggen
+  before you hit the ceiling.
+  - "High Usage" trigger — you hit ~90% heap, ZGC steps in immediately.
+  - Major collections (~40ms) — still happen every ~3s to clean up objects that survived to old gen. 40ms is a bit high but only happens
+  occasionally.
+
+  The allocation rate is very high (~1.3 GB/s). For a hello-world returning a static string, that's suspicious. Quarkus/Vert.x might be
+  allocating request/response buffers per request. Under heavy load this is normal — it's all short-lived garbage that minor GC handleswell.
+
+  Verdict: This is healthy GC behavior. Sub-15ms minor pauses at high throughput are good. If you want to squeeze further, you could try
+  -Xmx1g to give more breathing room between collections and reduce frequency.
+
+
+
+  -Xms512m \
+  -Xmx512m \
+Running 30s test @ http://localhost:8080/hello
+  8 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.87ms    4.52ms 135.92ms   98.54%
+    Req/Sec    21.51k     2.69k   24.82k    96.08%
+  Latency Distribution
+     50%    4.58ms
+     75%    5.02ms
+     90%    5.57ms
+     99%   11.69ms
+  5137776 requests in 30.07s, 450.78MB read
+Requests/sec: 170885.51
+Transfer/sec:     14.99MB
+
+
+  1. It's all per-request framework overhead — nothing unusual or leaking. Each request creates a routing context, request context, headers map, response buffer, CDI scope, etc.
+  2. The regex Matcher (120 samples) is interesting — that's likely route matching or header parsing. Pre-compiled patterns help, but Quarkus probably already does that; the Matcher itself is per-invocation.
+  3. This is normal for a framework-based app. The ~1.3 GB/s allocation rate you saw is just the cost of 10k+ request objects/second, each with ~10-15 short-lived objects. ZGC's young gen handles this fine.
+  4. To reduce further you'd need to bypass the framework entirely (raw Vert.x handler without RESTEasy, without CDI scope). But for a realistic benchmark this is a fair representation of Quarkus's actual per-request cost.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pure java (first run)
+-Xms512m -Xmx512m
+backlog size 1024
+
+➜ ./wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.49ms   21.20ms 220.72ms   83.70%
+    Req/Sec    49.93k     5.70k   59.61k    85.87%
+  Latency Distribution
+     50%    1.09ms
+     75%   16.44ms
+     90%   47.29ms
+     99%   83.21ms
+  5944743 requests in 30.07s, 651.98MB read
+  Socket errors: connect 0, read 91181, write 0, timeout 0
+Requests/sec: 197705.60
+Transfer/sec:     21.68MB
+
+
+
+pure java (second run)
+-Xms512m -Xmx512m
+backlog size 1024
+
+➜ ./wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.49ms   21.20ms 220.72ms   83.70%
+    Req/Sec    49.93k     5.70k   59.61k    85.87%
+  Latency Distribution
+     50%    1.09ms
+     75%   16.44ms
+     90%   47.29ms
+     99%   83.21ms
+  5944743 requests in 30.07s, 651.98MB read
+  Socket errors: connect 0, read 91181, write 0, timeout 0
+Requests/sec: 197705.60
+Transfer/sec:     21.68MB
+
+
+new run
+backlog size 1024
+pure java (second run)
+-Xms512m -Xmx512m
+
+➜ ./wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.03ms   20.14ms 121.74ms   83.53%
+    Req/Sec    48.46k     4.66k   59.45k    73.08%
+  Latency Distribution
+     50%    1.12ms
+     75%   15.89ms
+     90%   45.72ms
+     99%   79.01ms
+  5788424 requests in 30.06s, 634.83MB read
+  Socket errors: connect 0, read 94496, write 0, timeout 0
+Requests/sec: 192570.05
+Transfer/sec:     21.12MB
+
+● This is the pure Java server — nice improvement over Quarkus:
+
+  ┌───────────────────────┬───────────┬─────────────────────────────────────────────┐
+  │        Metric         │  Quarkus  │                  Pure Java                  │
+  ├───────────────────────┼───────────┼─────────────────────────────────────────────┤
+  │ Minor pause           │ 6–14ms    │ 5–14ms (similar)                            │
+  ├───────────────────────┼───────────┼─────────────────────────────────────────────┤
+  │ Major pause           │ 39–49ms   │ 9–19ms (2-3x faster)                        │
+  ├───────────────────────┼───────────┼─────────────────────────────────────────────┤
+  │ GC frequency          │ ~300ms    │ ~120ms                                      │
+  ├───────────────────────┼───────────┼─────────────────────────────────────────────┤
+  │ Live data after major │ 64–92M    │ 8–86M                                       │
+  ├───────────────────────┼───────────┼─────────────────────────────────────────────┤
+  │ Allocation rate       │ ~1.3 GB/s │ ~3 GB/s (higher frequency, smaller batches) │
+  └───────────────────────┴───────────┴─────────────────────────────────────────────┘
+
+  Key observations:
+
+  1. Major collections are 2-3x faster (9–19ms vs 39–49ms) — less old-gen garbage to scan, fewer complex objects.
+  2. Final major GC tells the story — 236M→8M — only 8MB of actual live data. The pure Java server's working set is tiny compared to
+  Quarkus's 64-86M (no CDI contexts, no routing maps, no Netty pools).
+  3. Still allocating a lot (~3 GB/s) — that's virtual thread stacks and the HttpExchange objects the JDK creates per request. The JDK's
+   com.sun.net.httpserver isn't zero-allocation, but the objects are simpler and die young.
+  4. GC(246) at the end — load stopped, proactive GC cleaned everything down to 8MB. That's your true baseline footprint.
+
+  This is about as good as it gets without going to raw NIO (which would eliminate the per-request HttpExchange allocations). How are
+  the req/s numbers comparing?
+
+
+
+new run
+backlog size 8192
+pure java (second run)
+-Xms512m -Xmx512m
+
+➜ ./wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.14ms   20.90ms 257.93ms   84.34%
+    Req/Sec    45.48k     8.37k   57.64k    79.26%
+  Latency Distribution
+     50%    1.17ms
+     75%   15.07ms
+     90%   45.72ms
+     99%   81.86ms
+  5416069 requests in 30.06s, 593.99MB read
+  Socket errors: connect 0, read 99831, write 0, timeout 0
+Requests/sec: 180186.69
+Transfer/sec:     19.76MB
+
+GC is the same as before
+Still ~100k read errors — so the backlog wasn't the bottleneck. The problem is in com.sun.net.httpserver itself. Its internal
+  implementation uses a single selector thread to accept connections and dispatch to the executor. At 192k req/s with 400 connections it
+   can't keep up, so connections get reset.
+
+  This is a known limitation of the JDK's built-in HTTP server — it wasn't designed for this load level.
+
+  Your options:
+
+  1. Accept it — 192k req/s is still great, the errors are just wrk overwhelming the accept loop. In a real scenario you wouldn't have
+  400 connections hammering from localhost.
+  2. Reduce connections — wrk -t4 -c100 -d30s will likely give you zero errors and still 100k+ req/s. This tests throughput without
+  overloading the accept queue.
+  3. Go raw NIO — write a custom event loop with java.nio.channels.Selector + virtual threads. Eliminates the HttpServer bottleneck
+  entirely, but significantly more code.
+
+
+
+
+
+
+raw nio
+  -Xms512m -Xmx512m
+
+  ➜ ./wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.99ms  803.46us  54.07ms   92.49%
+    Req/Sec    68.17k     2.35k   73.25k    77.25%
+  Latency Distribution
+     50%  746.00us
+     75%    1.27ms
+     90%    1.61ms
+     99%    3.43ms
+  8139816 requests in 30.06s, 791.80MB read
+Requests/sec: 270794.83
+Transfer/sec:     26.34MB
+
+  1. No minor collections at all — allocation rate is so low that young gen never fills up. Only proactive majors every ~3 seconds.
+  2. 5–14ms major pauses scanning just 62–154M — and after GC only 8–12M is alive. That's basically just the JVM's own internal
+  structures.
+  3. Near-zero allocation per request — the pre-built response bytes + reused read buffers mean almost nothing is created during the
+  request path.
+
+● 270k req/s, zero errors, p99 = 3.4ms. That's the cleanest run yet.
+
+  ┌────────┬─────────────────────┬─────────┐
+  │ Metric │     HttpServer      │ Raw NIO │
+  ├────────┼─────────────────────┼─────────┤
+  │ Req/s  │ 192k (with errors)  │ 270k    │
+  ├────────┼─────────────────────┼─────────┤
+  │ Errors │ 94–100k read errors │ 0       │
+  ├────────┼─────────────────────┼─────────┤
+  │ p50    │ 1.12ms              │ 0.75ms  │
+  ├────────┼─────────────────────┼─────────┤
+  │ p99    │ 79ms                │ 3.4ms   │
+  ├────────┼─────────────────────┼─────────┤
+  │ Max    │ 121ms               │ 54ms    │
+  └────────┴─────────────────────┴─────────┘
+
+  The single-selector bottleneck is gone. The round-robin accept + per-core selector pattern distributes load evenly and keeps all 24
+  cores busy without contention.
