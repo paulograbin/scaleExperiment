@@ -3,6 +3,7 @@ package com.paulograbin.scale;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.util.concurrent.Executors;
 
 public class Server {
@@ -11,7 +12,7 @@ public class Server {
     private static final byte[] HEALTH_BYTES = "{\"status\":\"UP\"}".getBytes();
 
     public static void main(String[] args) throws IOException {
-        var server = HttpServer.create(new InetSocketAddress(8080), 1024);
+        var server = HttpServer.create(new InetSocketAddress(8080), 4096);
         server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
 
         server.createContext("/hello", exchange -> {
