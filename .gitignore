@@ -23,6 +23,7 @@ Thumbs.db
 *.class
 *.jar
 *.war
+java-pure/out/
 
 # Go
 go/server
