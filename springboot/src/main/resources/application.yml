@@ -13,16 +13,16 @@ spring:
 server:
   port: 8080
   http2:
-    enabled: true
+    enabled: false
   compression:
     enabled: false
   undertow:
     threads:
       io: 24
-      worker: 200
-    buffer-size: 1024
+      worker: 48
+    buffer-size: 16384
     direct-buffers: true
-  shutdown: graceful
+  shutdown: immediate
 
 management:
   endpoints:

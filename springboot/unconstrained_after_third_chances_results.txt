@@ -1,0 +1,27 @@
+➜ wrk -t4 -c400 -d10s http://localhost:8080/hello
+Running 10s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.09ms   15.12ms 194.85ms   91.44%
+    Req/Sec    25.42k     9.86k   44.75k    66.92%
+  1002355 requests in 10.04s, 132.87MB read
+Requests/sec:  99803.29
+Transfer/sec:     13.23MB
+
+~ took 10s
+➜ wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.02ms    3.27ms 138.95ms   90.49%
+    Req/Sec    38.38k     3.04k   46.82k    74.17%
+  Latency Distribution
+     50%    2.14ms
+     75%    3.63ms
+     90%    6.12ms
+     99%   14.66ms
+  4585116 requests in 30.08s, 607.81MB read
+Requests/sec: 152414.44
+Transfer/sec:     20.20MB
+
+~ took 30s

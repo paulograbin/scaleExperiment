@@ -9,6 +9,7 @@ Sequential changes and their impact on throughput (unconstrained, 24-core machin
 | 0 | Baseline (Undertow, virtual threads, io=4) | 71k | 3.70ms | 28.7ms | 107ms | 334ms | — |
 | 1 | Disable metrics (http/jvm/system/process) + lazy init + JMX off | 73k | 3.65ms | 27.7ms | 88ms | 251ms | +3% |
 | 2 | Disable virtual threads + io threads 4→24 | 131k | 2.23ms | 14.6ms | 60ms | 192ms | +80% |
+| 3 | HTTP/2 off, workers 200→48, buffer 1K→16K, -TieredCompilation, huge pages | 152k | 2.14ms | 6.12ms | 14.6ms | 138ms | +16% |
 
 ## Change Details
 
@@ -41,6 +42,21 @@ server.undertow.threads.io: 24   # was 4
 **Why:** Virtual threads add ForkJoinPool scheduling overhead on every request. For a non-blocking hello-world with zero I/O wait, they provide no benefit — only contention. Bumping I/O threads to match CPU cores lets Undertow's XNIO event loop fully utilize the hardware.
 
 **Result:** Nearly doubled throughput. The ForkJoinPool was the main bottleneck.
+
+### 3. Disable HTTP/2, reduce workers, larger buffers, JVM tuning
+```yaml
+server.http2.enabled: false
+server.undertow.threads.worker: 48   # was 200
+server.undertow.buffer-size: 16384   # was 1024
+server.shutdown: immediate           # was graceful
+```
+```
+-XX:-TieredCompilation       # skip C1, compile straight to C2
+-XX:+UseTransparentHugePages # reduce TLB misses
+```
+**Why:** HTTP/2 adds framing overhead but wrk uses HTTP/1.1. Fewer workers reduces context switching. Larger buffers reduce read syscalls. -TieredCompilation produces fully optimized code after warmup. Transparent huge pages reduce memory access latency.
+
+**Result:** +16% throughput, p99 dropped from 60ms to 14ms. Spring Boot now matches Quarkus.
 
 ## Key Insight
 

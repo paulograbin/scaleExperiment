@@ -1,0 +1,42 @@
+[0.001s][warning][pagesize] Shared memory transparent huge pages are not enabled in the OS. Set /sys/kernel/mm/transparent_hugepage/shmem_enabled to 'advise' to enable them.
+[0.323s][info   ][gc      ] Using The Z Garbage Collector
+2026-06-04 14:25:46,447 [main] INFO  c.p.scale.ScaleExperimentApplication - Starting ScaleExperimentApplication v1.0.0 using Java 25.0.3 with PID 1 (/app/app.jar started by root in /app)
+2026-06-04 14:25:46,448 [main] INFO  c.p.scale.ScaleExperimentApplication - No active profile set, falling back to 1 default profile: "default"
+[1.965s][info   ][gc      ] GC(0) Major Collection (Metadata GC Threshold)
+[2.015s][info   ][gc      ] GC(0) Major Collection (Metadata GC Threshold) 246M(2%)->32M(0%) 0.050s
+2026-06-04 14:25:47,394 [main] WARN  io.undertow.websockets.jsr - UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.jboss.threads.JBossExecutors (jar:nested:/app/app.jar/!BOOT-INF/lib/jboss-threads-3.5.0.Final.jar!/)
+WARNING: Please consider reporting this to the maintainers of class org.jboss.threads.JBossExecutors
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+2026-06-04 14:25:48,051 [main] INFO  c.p.scale.ScaleExperimentApplication - Started ScaleExperimentApplication in 2.102 seconds (process running for 2.839)
+[5.473s][info   ][gc      ] GC(1) Major Collection (Metadata GC Threshold)
+[5.700s][info   ][gc      ] GC(1) Major Collection (Metadata GC Threshold) 286M(2%)->256M(2%) 0.228s
+[6.819s][info   ][gc      ] GC(2) Major Collection (Warmup)
+[6.954s][info   ][gc      ] GC(2) Major Collection (Warmup) 1492M(9%)->392M(2%) 0.135s
+[7.938s][info   ][gc      ] GC(3) Major Collection (Warmup)
+[8.070s][info   ][gc      ] GC(3) Major Collection (Warmup) 2924M(18%)->566M(4%) 0.132s
+[9.367s][info   ][gc      ] GC(4) Major Collection (Warmup)
+[9.533s][info   ][gc      ] GC(4) Major Collection (Warmup) 4382M(27%)->618M(4%) 0.166s
+[14.540s][info   ][gc      ] GC(5) Minor Collection (Allocation Rate)
+[14.625s][info   ][gc      ] GC(5) Minor Collection (Allocation Rate) 12796M(80%)->258M(2%) 0.085s
+[26.325s][info   ][gc      ] GC(6) Minor Collection (High Usage)
+[26.386s][info   ][gc      ] GC(6) Minor Collection (High Usage) 13698M(85%)->254M(2%) 0.061s
+[30.300s][info   ][gc      ] GC(7) Minor Collection (Allocation Rate)
+[30.345s][info   ][gc      ] GC(7) Minor Collection (Allocation Rate) 13654M(85%)->274M(2%) 0.045s
+[30.874s][info   ][gc      ] GC(8) Major Collection (Proactive)
+[31.013s][info   ][gc      ] GC(8) Major Collection (Proactive) 2076M(13%)->570M(4%) 0.139s
+[34.843s][info   ][gc      ] GC(9) Minor Collection (High Usage)
+[34.869s][info   ][gc      ] GC(9) Minor Collection (High Usage) 13696M(85%)->190M(1%) 0.026s
+[38.707s][info   ][gc      ] GC(10) Minor Collection (High Usage)
+[38.738s][info   ][gc      ] GC(10) Minor Collection (High Usage) 13688M(85%)->196M(1%) 0.031s
+[42.537s][info   ][gc      ] GC(11) Minor Collection (High Usage)
+[42.587s][info   ][gc      ] GC(11) Minor Collection (High Usage) 13706M(85%)->262M(2%) 0.049s
+[43.685s][info   ][gc      ] GC(12) Major Collection (Proactive)
+[43.828s][info   ][gc      ] GC(12) Major Collection (Proactive) 4216M(26%)->594M(4%) 0.143s
+[47.495s][info   ][gc      ] GC(13) Minor Collection (High Usage)
+[47.528s][info   ][gc      ] GC(13) Minor Collection (High Usage) 13678M(85%)->212M(1%) 0.033s
+[51.429s][info   ][gc      ] GC(14) Minor Collection (High Usage)
+[51.460s][info   ][gc      ] GC(14) Minor Collection (High Usage) 13688M(85%)->234M(1%) 0.031s
+[53.454s][info   ][gc      ] GC(15) Major Collection (Proactive)
+[53.493s][info   ][gc      ] GC(15) Major Collection (Proactive) 5602M(35%)->40M(0%) 0.039s

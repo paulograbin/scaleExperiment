@@ -6,6 +6,8 @@ COPY build/libs/scale-experiment-1.0.0.jar app.jar
 
 ENV JAVA_OPTS="-XX:+UseZGC \
   -XX:+AlwaysPreTouch \
+  -XX:-TieredCompilation \
+  -XX:+UseTransparentHugePages \
   -Xlog:gc \
   -Djava.security.egd=file:/dev/./urandom \
   -Dspring.jmx.enabled=false"
