@@ -1,0 +1,63 @@
+
+docker run --rm -p 8080:8080 --cpus=4 --memory=768m --name bench scale-go:latest > constrained_logs.txt
+
+➜ wrk -t4 -c400 -d10s http://localhost:8080/hello
+Running 10s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.64ms   10.13ms  51.54ms   84.25%
+    Req/Sec    33.72k     2.25k   41.81k    71.75%
+  1342519 requests in 10.06s, 147.24MB read
+Requests/sec: 133460.33
+Transfer/sec:     14.64MB
+
+~ took 10s
+➜ wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.33ms    9.64ms  52.06ms   84.80%
+    Req/Sec    33.58k     2.12k   40.41k    69.08%
+  Latency Distribution
+     50%    1.74ms
+     75%    5.59ms
+     90%   23.11ms
+     99%   38.49ms
+  4010783 requests in 30.07s, 439.87MB read
+Requests/sec: 133383.39
+Transfer/sec:     14.63MB
+
+~ took 30s
+
+
+
+
+new run with gomaxprocs=4
+
+➜ wrk -t4 -c400 -d10s http://localhost:8080/hello
+Running 10s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.78ms    1.77ms  45.93ms   76.42%
+    Req/Sec    35.84k     1.55k   40.52k    78.25%
+  1426798 requests in 10.05s, 156.48MB read
+Requests/sec: 142035.10
+Transfer/sec:     15.58MB
+
+~ took 10s
+➜ wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.83ms    1.57ms  18.61ms   67.59%
+    Req/Sec    34.78k     1.74k   39.63k    78.75%
+  Latency Distribution
+     50%    2.66ms
+     75%    3.81ms
+     90%    4.91ms
+     99%    7.17ms
+  4153017 requests in 30.05s, 455.47MB read
+Requests/sec: 138199.46
+Transfer/sec:     15.16MB
+
+~ took 30s

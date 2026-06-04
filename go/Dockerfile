@@ -7,5 +7,7 @@ RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o server .
 
 FROM scratch
 COPY --from=build /app/server /server
+ENV GODEBUG=gctrace=1
+ENV GOMAXPROCS=4
 EXPOSE 8080
 ENTRYPOINT ["/server"]
