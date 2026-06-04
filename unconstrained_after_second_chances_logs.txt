@@ -1,0 +1,37 @@
+[0.350s][info][gc] Using The Z Garbage Collector
+2026-06-04 14:10:58,183 [main] INFO  c.p.scale.ScaleExperimentApplication - Starting ScaleExperimentApplication v1.0.0 using Java 25.0.3 with PID 1 (/app/app.jar started by root in /app)
+2026-06-04 14:10:58,184 [main] INFO  c.p.scale.ScaleExperimentApplication - No active profile set, falling back to 1 default profile: "default"
+[1.414s][info][gc] GC(0) Major Collection (Metadata GC Threshold)
+[1.469s][info][gc] GC(0) Major Collection (Metadata GC Threshold) 218M(1%)->34M(0%) 0.055s
+2026-06-04 14:10:58,882 [main] WARN  io.undertow.websockets.jsr - UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.jboss.threads.JBossExecutors (jar:nested:/app/app.jar/!BOOT-INF/lib/jboss-threads-3.5.0.Final.jar!/)
+WARNING: Please consider reporting this to the maintainers of class org.jboss.threads.JBossExecutors
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+2026-06-04 14:10:59,402 [main] INFO  c.p.scale.ScaleExperimentApplication - Started ScaleExperimentApplication in 1.609 seconds (process running for 2.233)
+[20.443s][info][gc] GC(1) Major Collection (Metadata GC Threshold)
+[20.789s][info][gc] GC(1) Major Collection (Metadata GC Threshold) 262M(2%)->334M(2%) 0.346s
+[22.060s][info][gc] GC(2) Major Collection (Warmup)
+[22.166s][info][gc] GC(2) Major Collection (Warmup) 1452M(9%)->318M(2%) 0.106s
+[23.792s][info][gc] GC(3) Major Collection (Warmup)
+[23.915s][info][gc] GC(3) Major Collection (Warmup) 2902M(18%)->478M(3%) 0.123s
+[25.590s][info][gc] GC(4) Major Collection (Warmup)
+[25.747s][info][gc] GC(4) Major Collection (Warmup) 4344M(27%)->512M(3%) 0.157s
+[26.910s][info][gc] GC(5) Minor Collection (Allocation Rate)
+[26.984s][info][gc] GC(5) Minor Collection (Allocation Rate) 3874M(24%)->380M(2%) 0.075s
+[34.529s][info][gc] GC(6) Minor Collection (Allocation Rate)
+[34.570s][info][gc] GC(6) Minor Collection (Allocation Rate) 10492M(65%)->248M(2%) 0.041s
+[39.035s][info][gc] GC(7) Minor Collection (Allocation Rate)
+[39.100s][info][gc] GC(7) Minor Collection (Allocation Rate) 12074M(75%)->298M(2%) 0.065s
+[44.226s][info][gc] GC(8) Minor Collection (Allocation Rate)
+[44.269s][info][gc] GC(8) Minor Collection (Allocation Rate) 13666M(85%)->212M(1%) 0.043s
+[44.877s][info][gc] GC(9) Major Collection (Proactive)
+[45.123s][info][gc] GC(9) Major Collection (Proactive) 1964M(12%)->828M(5%) 0.247s
+[49.819s][info][gc] GC(10) Minor Collection (High Usage)
+[49.852s][info][gc] GC(10) Minor Collection (High Usage) 13688M(85%)->174M(1%) 0.033s
+[54.432s][info][gc] GC(11) Minor Collection (High Usage)
+[54.477s][info][gc] GC(11) Minor Collection (High Usage) 13694M(85%)->234M(1%) 0.045s
+[59.072s][info][gc] GC(12) Minor Collection (High Usage)
+[59.165s][info][gc] GC(12) Minor Collection (High Usage) 13696M(85%)->298M(2%) 0.093s
+[71.460s][info][gc] GC(13) Major Collection (Proactive)
+[71.533s][info][gc] GC(13) Major Collection (Proactive) 11786M(73%)->40M(0%) 0.072s
