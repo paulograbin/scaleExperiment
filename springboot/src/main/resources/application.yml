@@ -3,9 +3,12 @@ spring:
     name: scale-experiment
   threads:
     virtual:
-      enabled: true
+      enabled: false
   main:
     banner-mode: off
+    lazy-initialization: true
+  jmx:
+    enabled: false
 
 server:
   port: 8080
@@ -15,7 +18,7 @@ server:
     enabled: false
   undertow:
     threads:
-      io: 4
+      io: 24
       worker: 200
     buffer-size: 1024
     direct-buffers: true
@@ -27,6 +30,11 @@ management:
       exposure:
         include: health,prometheus,metrics
   metrics:
+    enable:
+      http: false
+      jvm: false
+      system: false
+      process: false
     tags:
       application: ${spring.application.name}
   endpoint:
