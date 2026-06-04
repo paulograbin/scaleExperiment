@@ -194,12 +194,12 @@ docker stop bench
 | Spring Boot | 32k | 6.76ms | 138ms | 413ms | 864ms | 0 | 4.23 MB/s |
 | Go | 138k | 2.66ms | 4.91ms | 7.17ms | 18ms | 0 | 15.16 MB/s |
 
-## Previous Results (unconstrained, for reference)
+## Results (unconstrained, no heap limit)
 
-| Implementation | Req/s | p50 | p99 | Errors | Notes |
-|----------------|-------|-----|-----|--------|-------|
-| Java Raw NIO | 270k | 0.75ms | 3.4ms | 0 | No CPU/memory limit |
-| Java Pure (HttpServer) | 192k | 1.12ms | 79ms | ~100k read errors | Single selector bottleneck |
-| Quarkus | 170k | 2.23ms | 5.6ms | 0 | No CPU/memory limit |
-| Spring Boot | 65–72k | 3.7ms | 57–67ms | 0 | Needs investigation |
-| Go | TBD | — | — | — | — |
+| Implementation | Req/s | p50 | p90 | p99 | Max | Errors | Transfer/sec |
+|----------------|-------|-----|-----|-----|-----|--------|--------------|
+| Java Raw NIO | 270k | 0.75ms | — | 3.4ms | 54ms | 0 | 26.34 MB/s |
+| Quarkus | 158k | 2.32ms | 3.42ms | 4.93ms | 34ms | 0 | 13.94 MB/s |
+| Java Pure (HttpServer) | 192k | 1.12ms | — | 79ms | 121ms | ~100k read errors | 21.12 MB/s |
+| Go (GOMAXPROCS=24) | 189k | 1.44ms | 4.05ms | 7.17ms | 19ms | 0 | 20.80 MB/s |
+| Spring Boot | 71k | 3.70ms | 28.77ms | 107ms | 334ms | 0 | 9.43 MB/s |

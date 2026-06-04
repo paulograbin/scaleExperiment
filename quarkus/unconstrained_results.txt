@@ -1,0 +1,30 @@
+docker run --rm -p 8080:8080 --name bench scale-quarkus:latest > unconstrained_logs.txt 2>&1
+
+
+➜ wrk -t4 -c400 -d10s http://localhost:8080/hello
+Running 10s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.08ms    5.30ms 105.07ms   98.05%
+    Req/Sec    37.15k     8.28k   45.99k    90.00%
+  1478784 requests in 10.05s, 129.75MB read
+Requests/sec: 147204.00
+Transfer/sec:     12.92MB
+
+~ took 10s
+➜ wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.40ms    0.89ms  34.98ms   74.64%
+    Req/Sec    40.00k     4.13k   47.06k    60.50%
+  Latency Distribution
+     50%    2.32ms
+     75%    2.82ms
+     90%    3.42ms
+     99%    4.93ms
+  4776795 requests in 30.06s, 419.11MB read
+Requests/sec: 158910.12
+Transfer/sec:     13.94MB
+
+~ took 30s

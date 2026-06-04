@@ -1,0 +1,21 @@
+[0.343s][info][gc] Using The Z Garbage Collector
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.jboss.threads.JBossExecutors (file:/app/lib/main/org.jboss.threads.jboss-threads-3.8.0.Final.jar)
+WARNING: Please consider reporting this to the maintainers of class org.jboss.threads.JBossExecutors
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[5.122s][info][gc] GC(0) Major Collection (Metadata GC Threshold)
+[5.162s][info][gc] GC(0) Major Collection (Metadata GC Threshold) 72M(0%)->54M(0%) 0.040s
+[6.977s][info][gc] GC(1) Major Collection (Warmup)
+[7.018s][info][gc] GC(1) Major Collection (Warmup) 1450M(9%)->146M(1%) 0.041s
+[9.686s][info][gc] GC(2) Major Collection (Warmup)
+[9.752s][info][gc] GC(2) Major Collection (Warmup) 2898M(18%)->184M(1%) 0.066s
+[13.603s][info][gc] GC(3) Major Collection (Warmup)
+[13.668s][info][gc] GC(3) Major Collection (Warmup) 4336M(27%)->192M(1%) 0.065s
+[31.935s][info][gc] GC(4) Major Collection (Proactive)
+[32.099s][info][gc] GC(4) Major Collection (Proactive) 12334M(77%)->288M(2%) 0.163s
+[43.842s][info][gc] GC(5) Minor Collection (High Usage)
+[43.933s][info][gc] GC(5) Minor Collection (High Usage) 13688M(85%)->222M(1%) 0.091s
+[45.819s][info][gc] GC(6) Major Collection (Proactive)
+[45.917s][info][gc] GC(6) Major Collection (Proactive) 2402M(15%)->228M(1%) 0.098s
+[56.352s][info][gc] GC(7) Major Collection (Proactive)
+[56.442s][info][gc] GC(7) Major Collection (Proactive) 6398M(40%)->46M(0%) 0.090s

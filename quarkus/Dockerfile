@@ -8,9 +8,6 @@ COPY target/quarkus-app/app/ app/
 COPY target/quarkus-app/quarkus/ quarkus/
 
 ENV JAVA_OPTS="-XX:+UseZGC \
-  -XX:+ZGenerational \
-  -Xms512m \
-  -Xmx512m \
   -XX:+AlwaysPreTouch \
   -Xlog:gc \
   -Djava.security.egd=file:/dev/./urandom"

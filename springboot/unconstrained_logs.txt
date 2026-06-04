@@ -1,0 +1,55 @@
+[0.349s][info][gc] Using The Z Garbage Collector
+2026-06-04 13:54:13,725 [main] INFO  c.p.scale.ScaleExperimentApplication - Starting ScaleExperimentApplication v1.0.0 using Java 25.0.3 with PID 1 (/app/app.jar started by root in /app)
+2026-06-04 13:54:13,726 [main] INFO  c.p.scale.ScaleExperimentApplication - No active profile set, falling back to 1 default profile: "default"
+[1.395s][info][gc] GC(0) Major Collection (Metadata GC Threshold)
+[1.451s][info][gc] GC(0) Major Collection (Metadata GC Threshold) 224M(1%)->32M(0%) 0.056s
+2026-06-04 13:54:14,418 [main] WARN  io.undertow.websockets.jsr - UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.jboss.threads.JBossExecutors (jar:nested:/app/app.jar/!BOOT-INF/lib/jboss-threads-3.5.0.Final.jar!/)
+WARNING: Please consider reporting this to the maintainers of class org.jboss.threads.JBossExecutors
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+2026-06-04 13:54:14,963 [main] INFO  c.p.scale.ScaleExperimentApplication - Started ScaleExperimentApplication in 1.619 seconds (process running for 2.245)
+[3.931s][info][gc] GC(1) Major Collection (Metadata GC Threshold)
+[4.112s][info][gc] GC(1) Major Collection (Metadata GC Threshold) 230M(1%)->220M(1%) 0.180s
+[5.655s][info][gc] GC(2) Major Collection (Warmup)
+[6.077s][info][gc] GC(2) Major Collection (Warmup) 1448M(9%)->718M(4%) 0.422s
+[7.661s][info][gc] GC(3) Major Collection (Warmup)
+[8.604s][info][gc] GC(3) Major Collection (Warmup) 2892M(18%)->2182M(14%) 0.943s
+[9.669s][info][gc] GC(4) Major Collection (Warmup)
+[11.137s][info][gc] GC(4) Major Collection (Warmup) 4342M(27%)->3464M(22%) 1.468s
+[11.663s][info][gc] GC(5) Major Collection (Allocation Rate)
+[14.100s][info][gc] GC(6) Minor Collection (Allocation Rate)
+[16.303s][info][gc] GC(6) Minor Collection (Allocation Rate) 5298M(33%)->2436M(15%) 2.203s
+[16.306s][info][gc] GC(7) Minor Collection (Allocation Rate)
+[18.926s][info][gc] GC(7) Minor Collection (Allocation Rate) 2438M(15%)->2380M(15%) 2.620s
+[18.926s][info][gc] GC(5) Major Collection (Allocation Rate) 4502M(28%)->2380M(15%) 7.263s
+[22.467s][info][gc] GC(8) Major Collection (Allocation Rate)
+[24.175s][info][gc] GC(9) Minor Collection (Allocation Rate)
+[25.228s][info][gc] GC(9) Minor Collection (Allocation Rate) 5508M(34%)->4406M(27%) 1.053s
+[26.020s][info][gc] GC(8) Major Collection (Allocation Rate) 3098M(19%)->3756M(23%) 3.553s
+[26.499s][info][gc] GC(10) Minor Collection (Allocation Rate)
+[28.481s][info][gc] GC(10) Minor Collection (Allocation Rate) 4676M(29%)->5018M(31%) 1.983s
+[28.511s][info][gc] GC(11) Minor Collection (Allocation Rate)
+[31.572s][info][gc] GC(11) Minor Collection (Allocation Rate) 5070M(32%)->7436M(46%) 3.061s
+[31.573s][info][gc] GC(12) Major Collection (Allocation Rate)
+[33.717s][info][gc] GC(13) Minor Collection (Allocation Rate)
+[37.261s][info][gc] GC(13) Minor Collection (Allocation Rate) 6758M(42%)->9206M(57%) 3.544s
+[37.307s][info][gc] GC(14) Minor Collection (Allocation Rate)
+[39.323s][info][gc] GC(14) Minor Collection (Allocation Rate) 9246M(58%)->7018M(44%) 2.017s
+[39.324s][info][gc] GC(12) Major Collection (Allocation Rate) 7438M(46%)->7020M(44%) 7.751s
+[39.522s][info][gc] GC(15) Minor Collection (Allocation Rate)
+[41.593s][info][gc] GC(15) Minor Collection (Allocation Rate) 7544M(47%)->8256M(51%) 2.071s
+[41.593s][info][gc] GC(16) Major Collection (Allocation Rate)
+[43.442s][info][gc] GC(17) Minor Collection (Allocation Rate)
+[45.332s][info][gc] GC(17) Minor Collection (Allocation Rate) 7764M(48%)->8586M(54%) 1.891s
+[45.333s][info][gc] GC(18) Minor Collection (Allocation Rate)
+[47.423s][info][gc] GC(18) Minor Collection (Allocation Rate) 8588M(54%)->9342M(58%) 2.090s
+[47.423s][info][gc] GC(19) Minor Collection (Allocation Rate)
+[48.798s][info][gc] GC(19) Minor Collection (Allocation Rate) 9344M(58%)->7700M(48%) 1.375s
+[48.874s][info][gc] GC(20) Minor Collection (Allocation Rate)
+[50.524s][info][gc] GC(20) Minor Collection (Allocation Rate) 7884M(49%)->6924M(43%) 1.651s
+[50.524s][info][gc] GC(16) Major Collection (Allocation Rate) 8256M(51%)->6924M(43%) 8.931s
+[50.646s][info][gc] GC(21) Major Collection (Allocation Rate)
+[54.852s][info][gc] GC(22) Minor Collection (Allocation Rate)
+[56.015s][info][gc] GC(22) Minor Collection (Allocation Rate) 4842M(30%)->2316M(14%) 1.163s
+[56.015s][info][gc] GC(21) Major Collection (Allocation Rate) 7180M(45%)->2316M(14%) 5.369s

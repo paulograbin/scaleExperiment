@@ -5,9 +5,6 @@ WORKDIR /app
 COPY build/libs/scale-experiment-1.0.0.jar app.jar
 
 ENV JAVA_OPTS="-XX:+UseZGC \
-  -XX:+ZGenerational \
-  -Xms512m \
-  -Xmx512m \
   -XX:+AlwaysPreTouch \
   -Xlog:gc \
   -Djava.security.egd=file:/dev/./urandom \
