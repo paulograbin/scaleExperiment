@@ -190,7 +190,7 @@ docker stop bench
 |----------------|-------|-----|-----|-----|-----|--------|--------------|
 | Java Raw NIO | TBD | — | — | — | — | — | — |
 | Java Pure (HttpServer) | TBD | — | — | — | — | — | — |
-| Quarkus | TBD | — | — | — | — | — | — |
+| Quarkus | 164k | 2.27ms | 3.17ms | 4.74ms | 27ms | 0 | 14.46 MB/s |
 | Spring Boot | 32k | 6.76ms | 138ms | 413ms | 864ms | 0 | 4.23 MB/s |
 | Go | TBD | — | — | — | — | — | — |
 
