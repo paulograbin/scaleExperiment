@@ -1,0 +1,32 @@
+docker run --rm -p 8080:8080 --name bench scale-springboot:latest > unconstrained_after_chances_logs.txt 2>&1
+
+
+➜ wrk -t4 -c400 -d10s http://localhost:8080/hello
+Running 10s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.54ms   25.38ms 382.77ms   90.14%
+    Req/Sec    14.77k     5.48k   26.11k    63.89%
+  582226 requests in 10.05s, 77.18MB read
+Requests/sec:  57913.21
+Transfer/sec:      7.68MB
+
+~ took 10s
+
+
+➜ wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.85ms   17.74ms 251.24ms   90.79%
+    Req/Sec    18.55k     3.90k   28.85k    79.01%
+  Latency Distribution
+     50%    3.65ms
+     75%   15.99ms
+     90%   27.72ms
+     99%   88.04ms
+  2209184 requests in 30.05s, 292.85MB read
+Requests/sec:  73527.48
+Transfer/sec:      9.75MB
+
+~ took 30s
