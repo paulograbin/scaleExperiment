@@ -1,0 +1,35 @@
+[0.297s][info][gc] Using The Z Garbage Collector
+Starting NIO server on :8080 with 4 event loops
+[8.657s][info][gc] GC(0) Major Collection (Warmup)
+[8.665s][info][gc] GC(0) Major Collection (Warmup) 52M(10%)->6M(1%) 0.008s
+[24.639s][info][gc] GC(1) Major Collection (Warmup)
+[24.649s][info][gc] GC(1) Major Collection (Warmup) 104M(20%)->10M(2%) 0.010s
+[29.581s][info][gc] GC(2) Major Collection (Warmup)
+[29.590s][info][gc] GC(2) Major Collection (Warmup) 154M(30%)->10M(2%) 0.008s
+[31.318s][info][gc] GC(3) Major Collection (Proactive)
+[31.328s][info][gc] GC(3) Major Collection (Proactive) 62M(12%)->12M(2%) 0.010s
+[33.090s][info][gc] GC(4) Major Collection (Proactive)
+[33.101s][info][gc] GC(4) Major Collection (Proactive) 64M(12%)->12M(2%) 0.011s
+[34.844s][info][gc] GC(5) Major Collection (Proactive)
+[34.852s][info][gc] GC(5) Major Collection (Proactive) 64M(12%)->12M(2%) 0.008s
+[36.605s][info][gc] GC(6) Major Collection (Proactive)
+[36.614s][info][gc] GC(6) Major Collection (Proactive) 64M(12%)->12M(2%) 0.009s
+[38.377s][info][gc] GC(7) Major Collection (Proactive)
+[38.387s][info][gc] GC(7) Major Collection (Proactive) 64M(12%)->12M(2%) 0.009s
+[40.146s][info][gc] GC(8) Major Collection (Proactive)
+[40.157s][info][gc] GC(8) Major Collection (Proactive) 64M(12%)->12M(2%) 0.011s
+[41.985s][info][gc] GC(9) Major Collection (Proactive)
+[42.005s][info][gc] GC(9) Major Collection (Proactive) 64M(12%)->10M(2%) 0.020s
+[43.839s][info][gc] GC(10) Major Collection (Proactive)
+[43.848s][info][gc] GC(10) Major Collection (Proactive) 62M(12%)->8M(2%) 0.008s
+[45.608s][info][gc] GC(11) Major Collection (Proactive)
+[45.619s][info][gc] GC(11) Major Collection (Proactive) 60M(12%)->8M(2%) 0.011s
+[47.378s][info][gc] GC(12) Major Collection (Proactive)
+[47.387s][info][gc] GC(12) Major Collection (Proactive) 60M(12%)->8M(2%) 0.009s
+[49.176s][info][gc] GC(13) Major Collection (Proactive)
+[49.186s][info][gc] GC(13) Major Collection (Proactive) 60M(12%)->8M(2%) 0.009s
+[50.964s][info][gc] GC(14) Major Collection (Proactive)
+[50.973s][info][gc] GC(14) Major Collection (Proactive) 60M(12%)->8M(2%) 0.008s
+[52.746s][info][gc] GC(15) Major Collection (Proactive)
+[52.757s][info][gc] GC(15) Major Collection (Proactive) 60M(12%)->8M(2%) 0.011s
+Shutting down...

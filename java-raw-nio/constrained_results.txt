@@ -1,0 +1,29 @@
+docker run --rm -p 8080:8080 --cpus=4 --memory=768m --name bench scale-java-raw-nio:latest > constrained_logs.txt
+
+➜ wrk -t4 -c400 -d10s http://localhost:8080/hello
+Running 10s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.39ms    1.54ms  56.69ms   96.96%
+    Req/Sec    63.73k     3.25k   71.82k    88.00%
+  2536989 requests in 10.05s, 246.79MB read
+Requests/sec: 252542.66
+Transfer/sec:     24.57MB
+
+~ took 10s
+➜ wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.35ms  728.66us  26.56ms   76.42%
+    Req/Sec    62.75k     2.92k   71.54k    76.08%
+  Latency Distribution
+     50%    1.25ms
+     75%    1.63ms
+     90%    2.17ms
+     99%    3.93ms
+  7493944 requests in 30.05s, 728.97MB read
+Requests/sec: 249375.95
+Transfer/sec:     24.26MB
+
+~ took 30s

@@ -1,0 +1,28 @@
+Nice — Quarkus with constraints: 164k req/s, p99=4.74ms. Much better than Spring Boot's 32k.
+
+
+Quarkus GC under constraints (4 CPUs, 768MB):
+
+  ┌───────────────────────┬─────────────────────────────────────┐
+  │        Metric         │                Value                │
+  ├───────────────────────┼─────────────────────────────────────┤
+  │ Minor pause           │ 5–14ms (mostly 6–9ms)               │
+  ├───────────────────────┼─────────────────────────────────────┤
+  │ Major pause           │ 20–68ms (mostly 34–42ms)            │
+  ├───────────────────────┼─────────────────────────────────────┤
+  │ Minor frequency       │ every ~400ms                        │
+  ├───────────────────────┼─────────────────────────────────────┤
+  │ Major frequency       │ every ~3s                           │
+  ├───────────────────────┼─────────────────────────────────────┤
+  │ Live data after minor │ 30–54M                              │
+  ├───────────────────────┼─────────────────────────────────────┤
+  │ Live data after major │ 28–76M                              │
+  ├───────────────────────┼─────────────────────────────────────┤
+  │ Allocation rate       │ ~1.1 GB/s (fills 460M every ~400ms) │
+  └───────────────────────┴─────────────────────────────────────┘
+
+  Compared to the unconstrained run (24 cores), the constrained GC is slightly worse on majors (34–42ms vs 19ms) because GC threads also compete for those 4
+  CPUs. But minor pauses are still tight and don't impact throughput much — the p99 of 4.74ms confirms that.
+
+  The pattern is steady-state healthy: minors clean up short-lived request objects every 400ms, proactive majors sweep old gen every 3s. No "High Usage" panic
+  collections during the benchmark portion (those only appear briefly at the start).

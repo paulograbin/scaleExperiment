@@ -1,0 +1,34 @@
+This is very telling. Here's the comparison:
+
+  Spring Boot GC under constraints — catastrophic:
+
+  ┌───────────────────┬─────────────────┬───────────────────────────────┐
+  │      Metric       │ Quarkus (4 CPU) │      Spring Boot (4 CPU)      │
+  ├───────────────────┼─────────────────┼───────────────────────────────┤
+  │ Minor pause       │ 5–14ms          │ 100–400ms                     │
+  ├───────────────────┼─────────────────┼───────────────────────────────┤
+  │ Major pause       │ 20–68ms         │ 490–1371ms                    │
+  ├───────────────────┼─────────────────┼───────────────────────────────┤
+  │ Allocation Stalls │ 0               │ Constant (50–157ms per stall) │
+  ├───────────────────┼─────────────────┼───────────────────────────────┤
+  │ Heap after GC     │ 30–76M          │ 348–512M (can't keep up!)     │
+  ├───────────────────┼─────────────────┼───────────────────────────────┤
+  │ Heap at 100%      │ Never           │ Repeatedly                    │
+  └───────────────────┴─────────────────┴───────────────────────────────┘
+
+  What's happening:
+
+  1. Allocation Stalls — threads are blocked waiting for GC to free memory. The app is allocating faster than ZGC can reclaim on 4 CPUs. Every worker thread
+  (ForkJoinPool-1-worker-*, XNIO-1 I/O-*) hits stalls of 50–157ms.
+  2. Heap hitting 100% — 512M(100%) appears repeatedly. ZGC can't collect fast enough, so the heap fills completely, triggering emergency "Allocation Stall"
+  collections.
+  3. GC competing for CPUs — With only 4 CPUs, ZGC's concurrent threads steal CPU from the application. Undertow's I/O threads + virtual thread ForkJoinPool +
+  ZGC all compete. Quarkus's event-loop model needs far fewer threads, leaving more CPU for GC.
+
+  Root cause: Spring Boot + virtual threads generates too much garbage too fast for 4 CPUs + 512M to handle. The 512M heap is too small for its allocation
+  rate under contention.
+
+  Fix options:
+  - Increase heap: --memory=1536m with -Xmx1g
+  - Increase CPUs: --cpus=8
+  - Or accept that Undertow + virtual threads is not a good fit for extreme resource constraints

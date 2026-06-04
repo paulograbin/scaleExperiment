@@ -1,0 +1,33 @@
+
+docker run --rm -p 8080:8080 --cpus=4 --memory=768m --name bench scale-java-pure:latest > constrained_logs.txt
+
+~
+➜ wrk -t4 -c400 -d10s http://localhost:8080/hello
+Running 10s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.72ms    7.00ms 120.02ms   89.35%
+    Req/Sec    29.28k     8.69k   39.77k    79.25%
+  1166423 requests in 10.06s, 127.92MB read
+  Socket errors: connect 0, read 89712, write 0, timeout 0
+Requests/sec: 115955.00
+Transfer/sec:     12.72MB
+
+~ took 10s
+➜ wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.81ms    4.54ms  44.61ms   85.37%
+    Req/Sec    33.90k     2.99k   43.06k    74.58%
+  Latency Distribution
+     50%    1.80ms
+     75%    4.05ms
+     90%   10.89ms
+     99%   20.16ms
+  4051041 requests in 30.08s, 444.29MB read
+  Socket errors: connect 0, read 330443, write 0, timeout 0
+Requests/sec: 134685.77
+Transfer/sec:     14.77MB
+
+~ took 30s

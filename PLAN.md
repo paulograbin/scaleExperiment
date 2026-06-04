@@ -188,11 +188,11 @@ docker stop bench
 
 | Implementation | Req/s | p50 | p90 | p99 | Max | Errors | Transfer/sec |
 |----------------|-------|-----|-----|-----|-----|--------|--------------|
-| Java Raw NIO | TBD | — | — | — | — | — | — |
-| Java Pure (HttpServer) | TBD | — | — | — | — | — | — |
+| Java Raw NIO | 249k | 1.25ms | 2.17ms | 3.93ms | 26ms | 0 | 24.26 MB/s |
+| Java Pure (HttpServer) | 134k | 1.80ms | 10.89ms | 20.16ms | 44ms | 330k read errors | 14.77 MB/s |
 | Quarkus | 164k | 2.27ms | 3.17ms | 4.74ms | 27ms | 0 | 14.46 MB/s |
 | Spring Boot | 32k | 6.76ms | 138ms | 413ms | 864ms | 0 | 4.23 MB/s |
-| Go | TBD | — | — | — | — | — | — |
+| Go | 138k | 2.66ms | 4.91ms | 7.17ms | 18ms | 0 | 15.16 MB/s |
 
 ## Previous Results (unconstrained, for reference)
 
