@@ -1,0 +1,29 @@
+docker run --rm -p 8080:8080 --cpus=4 --memory=768m --name bench scale-springboot:latest > constrained_logs.txt
+
+
+warm up
+
+➜ wrk -t4 -c400 -d10s http://localhost:8080/hello
+Running 10s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.90ms   90.01ms 948.13ms   90.55%
+    Req/Sec     5.29k     2.89k   17.15k    75.00%
+  211325 requests in 10.06s, 28.01MB read
+Requests/sec:  21013.65
+Transfer/sec:      2.79MB
+
+➜ wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.64ms   87.69ms 864.16ms   89.73%
+    Req/Sec     8.12k     4.45k   23.79k    65.42%
+  Latency Distribution
+     50%    6.76ms
+     75%   55.97ms
+     90%  138.59ms
+     99%  413.39ms
+  960144 requests in 30.07s, 127.28MB read
+Requests/sec:  31926.06
+Transfer/sec:      4.23MB

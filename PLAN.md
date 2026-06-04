@@ -139,12 +139,67 @@ make clean    # removes build artifacts and images
 | Health | `/actuator/health` | `/q/health` | `/actuator/health` | `/actuator/health` | `/actuator/health` |
 | Benchmark | `wrk -t4 -c400 -d30s --latency http://localhost:8080/hello` | same | same | same | same |
 
-## Observed Results (24-core machine, 512M heap, Docker)
+## Benchmark Method
 
-| Implementation | Req/s | p50 | p99 | Errors | GC pauses |
-|----------------|-------|-----|-----|--------|-----------|
-| Java Raw NIO | 270k | 0.75ms | 3.4ms | 0 | 5–14ms major, every ~3s |
-| Java Pure (HttpServer) | 192k | 1.12ms | 79ms | ~100k read errors | 5–14ms minor, every ~120ms |
-| Quarkus | TBD | — | — | — | 6–14ms minor, every ~300ms |
-| Spring Boot | TBD | — | — | — | TBD |
-| Go | TBD | — | — | — | N/A |
+To produce comparable results, follow this exact procedure for each implementation:
+
+### 1. Build all images
+```bash
+make all
+```
+
+### 2. For each implementation, run in order:
+
+```bash
+# Start container (constrained: 4 CPUs, 768MB RAM)
+docker run --rm -p 8080:8080 --cpus=4 --memory=768m --name bench scale-<name>
+
+# In another terminal:
+
+# Verify it's up
+curl http://localhost:8080/hello
+
+# Warm up (discard results — lets JIT compile, pools initialize)
+wrk -t4 -c400 -d10s http://localhost:8080/hello
+
+# Benchmark (this is the real run)
+wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+
+# Stop container
+docker stop bench
+```
+
+### Image names
+| Implementation | Image | Container name |
+|----------------|-------|----------------|
+| Spring Boot | `scale-springboot` | bench |
+| Quarkus | `scale-quarkus` | bench |
+| Java Pure | `scale-java-pure` | bench |
+| Java Raw NIO | `scale-java-raw-nio` | bench |
+| Go | `scale-go` | bench |
+
+### Environment
+- Machine: 24-core (note: container limited to 4 CPUs)
+- Memory: 768MB container limit
+- wrk: 4 threads, 400 connections, 30s duration
+- Warm-up: 10s before each measurement
+
+## Results (--cpus=4 --memory=768m)
+
+| Implementation | Req/s | p50 | p90 | p99 | Max | Errors | Transfer/sec |
+|----------------|-------|-----|-----|-----|-----|--------|--------------|
+| Java Raw NIO | TBD | — | — | — | — | — | — |
+| Java Pure (HttpServer) | TBD | — | — | — | — | — | — |
+| Quarkus | TBD | — | — | — | — | — | — |
+| Spring Boot | 32k | 6.76ms | 138ms | 413ms | 864ms | 0 | 4.23 MB/s |
+| Go | TBD | — | — | — | — | — | — |
+
+## Previous Results (unconstrained, for reference)
+
+| Implementation | Req/s | p50 | p99 | Errors | Notes |
+|----------------|-------|-----|-----|--------|-------|
+| Java Raw NIO | 270k | 0.75ms | 3.4ms | 0 | No CPU/memory limit |
+| Java Pure (HttpServer) | 192k | 1.12ms | 79ms | ~100k read errors | Single selector bottleneck |
+| Quarkus | 170k | 2.23ms | 5.6ms | 0 | No CPU/memory limit |
+| Spring Boot | 65–72k | 3.7ms | 57–67ms | 0 | Needs investigation |
+| Go | TBD | — | — | — | — |

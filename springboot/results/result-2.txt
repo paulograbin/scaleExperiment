@@ -1,0 +1,17 @@
+docker run --rm -p 8080:8080 scale-springboot:latest
+
+➜ wrk -t4 -c400 -d30s --latency http://localhost:8080/hello
+Running 30s test @ http://localhost:8080/hello
+  4 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.63ms   13.72ms  99.74ms   84.46%
+    Req/Sec    18.25k     4.73k   29.74k    61.67%
+  Latency Distribution
+     50%    3.68ms
+     75%   16.12ms
+     90%   31.00ms
+     99%   57.57ms
+  2180117 requests in 30.07s, 289.00MB read
+Requests/sec:  72496.61
+Transfer/sec:      9.61MB
+
