@@ -1,0 +1,17 @@
+FROM eclipse-temurin:25-jre-alpine AS runtime
+
+WORKDIR /app
+
+COPY build/libs/scale-experiment-tomcat-1.0.0.jar app.jar
+
+ENV JAVA_OPTS="-XX:+UseZGC \
+  -XX:+AlwaysPreTouch \
+  -XX:-TieredCompilation \
+  -XX:+UseTransparentHugePages \
+  -Xlog:gc \
+  -Djava.security.egd=file:/dev/./urandom \
+  -Dspring.jmx.enabled=false"
+
+EXPOSE 8080
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

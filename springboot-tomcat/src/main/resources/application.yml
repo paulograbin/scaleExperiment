@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: scale-experiment-tomcat
+  threads:
+    virtual:
+      enabled: false
+  main:
+    banner-mode: off
+    lazy-initialization: true
+  jmx:
+    enabled: false
+
+server:
+  port: 8080
+  http2:
+    enabled: false
+  compression:
+    enabled: false
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 24
+    accept-count: 4096
+    max-connections: 8192
+  shutdown: immediate
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,metrics
+  metrics:
+    enable:
+      http: false
+      jvm: false
+      system: false
+      process: false
+    tags:
+      application: ${spring.application.name}
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    root: WARN
+    com.paulograbin.scale: INFO
